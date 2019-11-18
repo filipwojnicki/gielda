@@ -1,5 +1,6 @@
 import './env';
 import './db';
+import './socket';
 
 import fs from 'fs';
 import cors from 'cors';
