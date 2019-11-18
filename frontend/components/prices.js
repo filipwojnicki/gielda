@@ -21,7 +21,7 @@ export default class prices extends Component {
           </thead>
           <tbody>
             {this.props.prices.Items ? this.props.prices.Items.map(item =>
-              <tr>
+              <tr key={item.Code}>
                 <td>{item.Name}</td>
                 <td>{item.Price}</td>
               </tr>
