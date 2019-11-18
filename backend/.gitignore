@@ -1,7 +1,9 @@
 # Logs
 logs
 *.log
+*.lock
 npm-debug.log*
+package-lock.json
 
 # Dependency directories
 node_modules
@@ -14,6 +16,9 @@ node_modules
 
 # Yarn integrity file
 .yarn-integrity
+
+# Yarn lock file
+yarn.lock
 
 # IntelliJ IDE
 .idea
@@ -33,3 +38,6 @@ coverage
 
 # Vim swp files
 *.swp
+
+# test file
+test.js
