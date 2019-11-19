@@ -1,4 +1,5 @@
 import WebSocket from 'ws';
+import * as InstrumentHistoryController from './controllers/instrumentsHistory';
 
 const websocketList = [];
 
@@ -9,6 +10,12 @@ FPSocket.on('message', function incoming(data) {
 
   for (const websocketclient of websocketList) {
     websocketclient.send(data);
+  }
+
+  data = data ? JSON.parse(data) : null;
+
+  if (data.Items) {
+    return InstrumentHistoryController.logPrices(data.Items, data.PublicationDate);
   }
 });
 
