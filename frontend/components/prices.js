@@ -1,16 +1,15 @@
 import React, { Component } from 'react'
 
-import { Table, Spinner } from 'reactstrap'
+import { Table, Spinner, Row, Col } from 'reactstrap'
 
 export default class prices extends Component {
   constructor(props) {
     super(props);
   }
 
-  render() {
-    return (
-      <div>
-        <h2 className="p-4">Stock prices</h2>
+  generateTable() {
+    if (this.props.prices.Items) {
+      return (
         <Table striped>
           <thead>
             <tr>
@@ -20,17 +19,34 @@ export default class prices extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.props.prices.Items ? this.props.prices.Items.map(item =>
+            {this.props.prices.Items.map(item =>
               <tr key={item.Code}>
                 <td>{item.Name}</td>
                 <td>{item.Price}</td>
               </tr>
-            ) :
-            <Spinner className="mx-auto" size="lg" color="secondary" />
-            }
+            )}
           </tbody>
         </Table>
+      );
+    }
 
+    return (<Spinner className="mx-auto" size="lg" color="secondary" />)
+  }
+
+  render() {
+    return (
+      <div>
+        <Row className="p-4 h-100 align-items-center">
+          <Col>
+            <h2>Stock prices</h2>
+          </Col>
+          <Col className="text-right">
+            <span className="">
+              {this.props.prices.PublicationDate ? this.props.prices.PublicationDate : ''}
+            </span>
+          </Col>
+        </Row>
+        {this.generateTable()}
       </div>
     )
   }
