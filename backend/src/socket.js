@@ -8,7 +8,7 @@ const websocketList = [];
 
 const FPSocket = new wsc.WebSocketClient();
 
-FPSocket.open('ws://webtask.future-processing.com:8068/ws/stocks?format=json');
+FPSocket.open(process.env.SOCKET_URL);
 
 FPSocket.onmessage = function(data) {
   for (const websocketclient of websocketList) {
