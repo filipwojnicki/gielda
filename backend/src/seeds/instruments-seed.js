@@ -11,27 +11,33 @@ export function seed(knex) {
       return knex('instruments').insert([
         {
           name: 'Future Processing',
-          code: 'FP'
+          code: 'FP',
+          count: 0
         },
         {
           name: 'FP Lab',
-          code: 'FPL'
+          code: 'FPL',
+          count: 0
         },
         {
           name: 'Progress Bar',
-          code: 'PGB'
+          code: 'PGB',
+          count: 0
         },
         {
           name: 'FP Coin',
-          code: 'FPC'
+          code: 'FPC',
+          count: 0
         },
         {
           name: 'FP Adventure',
-          code: 'FPA'
+          code: 'FPA',
+          count: 0
         },
         {
           name: 'Deadline 24',
-          code: 'DL24'
+          code: 'DL24',
+          count: 0
         }
       ]);
     });

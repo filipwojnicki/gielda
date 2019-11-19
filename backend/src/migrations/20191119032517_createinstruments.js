@@ -13,6 +13,7 @@ export function up(knex) {
       .defaultTo(knex.raw('now()'));
     table.string('name').notNull();
     table.string('code').notNull();
+    table.integer('count').defaultTo(0);
   });
 }
 
