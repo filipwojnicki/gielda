@@ -1,13 +1,16 @@
 import WebSocket from 'ws';
+
+import * as wsc from './lib/webSocketClient';
+
 import * as InstrumentHistoryController from './controllers/instrumentsHistory';
 
 const websocketList = [];
 
-const FPSocket = new WebSocket('ws://webtask.future-processing.com:8068/ws/stocks?format=json');
+const FPSocket = new wsc.WebSocketClient();
 
-FPSocket.on('message', function incoming(data) {
-  // console.log(data);
+FPSocket.open('ws://webtask.future-processing.com:8068/ws/stocks?format=json');
 
+FPSocket.onmessage = function(data) {
   for (const websocketclient of websocketList) {
     websocketclient.send(data);
   }
@@ -17,10 +20,11 @@ FPSocket.on('message', function incoming(data) {
   if (data.Items) {
     return InstrumentHistoryController.logPrices(data.Items, data.PublicationDate);
   }
-});
+};
 
 const wss = new WebSocket.Server({ port: 8080 });
 
 wss.on('connection', function connection(ws) {
+  // TODO: socket authorization
   websocketList.push(ws);
 });
