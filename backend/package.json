@@ -1,6 +1,6 @@
 {
   "name": "stocks",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Express API ES6 Starter",
   "scripts": {
     "start": "node dist",
@@ -11,11 +11,11 @@
     "seed": "yarn knex seed:run --knexfile src/knexfile.js",
     "build": "rimraf dist && babel src -D --out-dir dist",
     "knex": "babel-node node_modules/.bin/knex",
-    "migrate": "yarn knex migrate:latest --knexfile src/knexfile.js",
+    "migrate": "knex migrate:latest --knexfile src/knexfile.js",
     "rollback": "yarn knex migrate:rollback --knexfile src/knexfile.js",
     "prettier": "prettier --write **/*.{js,json,yml,yaml,md}",
     "make:seeder": "yarn knex seed:make --knexfile src/knexfile.js",
-    "make:migration": "yarn knex migrate:make --knexfile src/knexfile.js",
+    "make:migration": "knex migrate:make --knexfile src/knexfile.js",
     "start:dev": "nodemon --watch .env --watch src --exec babel-node src --source-maps",
     "dev": "node run start:dev",
     "test": "cross-env NODE_ENV=test mocha --exit --recursive --require @babel/register test",
