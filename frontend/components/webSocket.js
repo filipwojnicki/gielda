@@ -16,7 +16,7 @@ export default class webSocket extends Component {
   timeout = 250;
 
   connect = () => {
-    var ws = new WebSocket("ws://localhost:8080");
+    var ws = new WebSocket(process.env['SOCKET_URL']);
     let that = this;
     var connectInterval;
 
