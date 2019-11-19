@@ -18,6 +18,8 @@ FPSocket.onmessage = function(data) {
   data = data ? JSON.parse(data) : null;
 
   if (data.Items) {
+    if (!data.Items.length) return;
+
     return InstrumentHistoryController.logPrices(data.Items, data.PublicationDate);
   }
 };
