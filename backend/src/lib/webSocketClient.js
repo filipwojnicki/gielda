@@ -16,6 +16,9 @@ WebSocketClient.prototype.open = function(url) {
   this.instance.on('open', () => {
     this.onopen();
   });
+  this.instance.on('message', data => {
+    this.onmessage(data);
+  });
   this.instance.on('close', e => {
     switch (e.code) {
       case 1000: // CLOSE_NORMAL
@@ -57,9 +60,9 @@ WebSocketClient.prototype.reconnect = function() {
 WebSocketClient.prototype.onopen = function(e) {
   logger.info('WebSocketClient: open', e);
 };
-// WebSocketClient.prototype.onmessage = function (data, flags, number) {
-//  console.log("WebSocketClient: message", arguments);
-// }
+WebSocketClient.prototype.onmessage = function(data) {
+  return data;
+};
 WebSocketClient.prototype.onerror = function(e) {
   logger.error('WebSocketClient: error', e);
 };
