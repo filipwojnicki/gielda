@@ -4,25 +4,27 @@ import { Chart } from 'react-charts'
 export default function StockPriceChart(props) {
   let chartData = [];
 
-  if (props.historicalPrices.length) {
-    props.historicalPrices.map(historicalPrice => {
-      let tempObj = {
-        label: `${historicalPrice.name} (${historicalPrice.code})`,
-        data: []
-      }
+  if (typeof props.historicalPrices === 'object') {
+    if (props.historicalPrices.length) {
+      props.historicalPrices.map(historicalPrice => {
+        let tempObj = {
+          label: `${historicalPrice.name} (${historicalPrice.code})`,
+          data: []
+        }
 
-      let i = 1;
+        let i = 1;
 
-      [...historicalPrice.instrumentHistory].reverse().map(instrument => {
-        tempObj.data.push({
-          x: i,
-          y: instrument.price
+        [...historicalPrice.instrumentHistory].reverse().map(instrument => {
+          tempObj.data.push({
+            x: i,
+            y: instrument.price
+          });
+
+          i++;
         });
-
-        i++;
-      });
-      chartData.push(tempObj);
-    })
+        chartData.push(tempObj);
+      })
+    }
   }
 
   const data = React.useMemo(
