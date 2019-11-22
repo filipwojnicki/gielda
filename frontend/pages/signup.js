@@ -12,12 +12,11 @@ import 'toastr/build/toastr.min.css'
 
 let container;
 
-export default class index extends Component {
+export default class SignUp extends Component {
   constructor() {
     super();
 
     this.state = {
-      prices: {},
       email: '',
       password: '',
       name: '',
@@ -27,7 +26,6 @@ export default class index extends Component {
   }
 
   handleChange = (e) => {
-    console.log(e.target.name)
     this.setState({
       [e.target.name]: e.target.value
     });
@@ -52,7 +50,6 @@ export default class index extends Component {
 
       return toastr.error(data.text);
     }
-    console.log(data);
     return toastr.success(data.text);
   }
 
