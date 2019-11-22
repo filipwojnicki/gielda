@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import * as userController from '../controllers/users';
-import { findUser, userValidator } from '../validators/userValidator';
+import { signUpValidator } from '../validators/userValidator';
 
 const router = Router();
 
@@ -18,16 +18,16 @@ router.get('/:id', userController.fetchById);
 /**
  * POST /api/users
  */
-router.post('/', userValidator, userController.create);
+router.post('/', signUpValidator, userController.create);
 
 /**
  * PUT /api/users/:id
  */
-router.put('/:id', findUser, userValidator, userController.update);
+// router.put('/:id', findUser, userValidator, userController.update);
 
 /**
  * DELETE /api/users/:id
  */
-router.delete('/:id', findUser, userController.deleteUser);
+// router.delete('/:id', findUser, userController.deleteUser);
 
 export default router;

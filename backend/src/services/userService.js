@@ -1,4 +1,5 @@
 import Boom from '@hapi/boom';
+import crypto from 'crypto';
 
 import User from '../models/user';
 
@@ -27,13 +28,37 @@ export function getUser(id) {
 }
 
 /**
+ * Check if user exist by email.
+ *
+ * @param   {String}  email
+ * @returns {Promise}
+ */
+export function checkUserByEmail(email) {
+  return new User()
+    .where({ email })
+    .fetchAll()
+    .then(user => {
+      return user.toArray().length ? true : false;
+    });
+}
+
+/**
  * Create new user.
  *
  * @param   {Object}  user
  * @returns {Promise}
  */
 export function createUser(user) {
-  return new User({ name: user.name }).save();
+  return new User({
+    name: user.name,
+    lastname: user.lastname,
+    email: user.email,
+    password: crypto
+      .createHash('sha256')
+      .update(user.password)
+      .digest('base64'),
+    credits: user.credits || 0
+  }).save();
 }
 
 /**

@@ -37,10 +37,16 @@ export function fetchById(req, res, next) {
  * @param {Object} res
  * @param {Function} next
  */
-export function create(req, res, next) {
-  userService
+export async function create(req, res, next) {
+  const userExist = await userService.checkUserByEmail(req.body.email).catch(err => next(err));
+
+  if (userExist) {
+    return res.status(HttpStatus.NOT_FOUND).json({ success: false, text: 'This email is used.' });
+  }
+
+  return userService
     .createUser(req.body)
-    .then(data => res.status(HttpStatus.CREATED).json({ data }))
+    .then(() => res.status(HttpStatus.CREATED).json({ success: true, text: 'Your account has been created.' }))
     .catch(err => next(err));
 }
 

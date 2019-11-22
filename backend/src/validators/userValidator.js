@@ -3,11 +3,30 @@ import Joi from '@hapi/joi';
 import validate from '../utils/validate';
 import * as userService from '../services/userService';
 
-// Validation schema
-const schema = Joi.object({
+// Sign Up schema
+const signUpSchema = Joi.object({
   name: Joi.string()
-    .label('Name')
-    .max(90)
+    .label('name')
+    .min(3)
+    .max(30)
+    .required(),
+  lastname: Joi.string()
+    .label('lastname')
+    .min(3)
+    .max(30)
+    .required(),
+  email: Joi.string()
+    .label('email')
+    .email({
+      minDomainSegments: 2
+    }),
+  password: Joi.string()
+    .label('password')
+    .min(5)
+    .max(30)
+    .required(),
+  credits: Joi.number()
+    .label('credits')
     .required()
 });
 
@@ -19,8 +38,8 @@ const schema = Joi.object({
  * @param   {Function} next
  * @returns {Promise}
  */
-function userValidator(req, res, next) {
-  return validate(req.body, schema)
+function signUpValidator(req, res, next) {
+  return validate(req.body, signUpSchema)
     .then(() => next())
     .catch(err => next(err));
 }
@@ -40,4 +59,4 @@ function findUser(req, res, next) {
     .catch(err => next(err));
 }
 
-export { findUser, userValidator };
+export { findUser, signUpValidator };

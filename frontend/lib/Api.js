@@ -21,4 +21,76 @@ export default class Api {
 
     return [];
   }
+
+  async signIn(email, password) {
+    const data = {
+      email,
+      password
+    };
+
+    const options = {
+      method: 'POST',
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      data: qs.stringify(data),
+      url: '/api/users',
+    };
+
+    const res = await axios(options)
+      .catch(err => {
+        throw err
+      });
+
+    return res;
+  }
+
+  async signUp(name, lastname, email, password, credits) {
+    const data = {
+      email,
+      password,
+      name,
+      lastname,
+      credits
+    };
+
+    console.log(data)
+
+    const options = {
+      method: 'POST',
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      data: qs.stringify(data),
+      url: '/users',
+    };
+
+    const res = await axios(options)
+      .catch(err => {
+        throw err
+      });
+
+    console.log(res);
+
+    return res;
+  }
+
+  async checkAuthToken(token) {
+    const data = {
+      token
+    };
+
+    const options = {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded'
+      },
+      data: qs.stringify(data),
+      url: '/auth/checkToken',
+    };
+
+    const res = await axios(options)
+      .catch(err => {
+        throw err
+      });
+
+    return res;
+  }
+
 }
