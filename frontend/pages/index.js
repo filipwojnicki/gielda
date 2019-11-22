@@ -143,7 +143,7 @@ export default class index extends Component {
               {this.state.showedChart ? <StockPriceChart historicalPrices={this.state.historicalPrices} /> : ''}
             </Col>
             <Col md="6">
-                1
+              <span className="h2">Available money {(this.state.userData.credits) ? this.state.userData.credits : 0}</span>
             </Col>
           </Row>
         </Container>
