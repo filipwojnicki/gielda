@@ -26,7 +26,7 @@ class InstrumentHistory extends bookshelf.Model {
    * Relation with instrument model.
    */
   instrument() {
-    return this.hasMany(Instrument);
+    return this.belongsTo(Instrument);
   }
 }
 

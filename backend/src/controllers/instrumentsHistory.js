@@ -1,6 +1,8 @@
 import * as InstrumentService from '../services/instrumentService';
 import * as InstrumentHistoryService from '../services/instrumentHistoryService';
 
+import HttpStatus from 'http-status-codes';
+
 /**
  * Log actual prices.
  *
@@ -22,5 +24,18 @@ export function logPrices(items, date) {
         price: currentItem.Price
       });
     });
+  });
+}
+
+/**
+ * Get past twenty historical prices.
+ *
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
+export function historicalPrices(req, res, next) {
+  return InstrumentHistoryService.getHistoricalPrices().then(historicalPrices => {
+    return res.status(HttpStatus.OK).json({ historicalPrices });
   });
 }
