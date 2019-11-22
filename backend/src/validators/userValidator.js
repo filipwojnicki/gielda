@@ -30,6 +30,20 @@ const signUpSchema = Joi.object({
     .required()
 });
 
+// Sign In schema
+const signInSchema = Joi.object({
+  email: Joi.string()
+    .label('email')
+    .email({
+      minDomainSegments: 2
+    }),
+  password: Joi.string()
+    .label('password')
+    .min(5)
+    .max(30)
+    .required()
+});
+
 /**
  * Validate create/update user request.
  *
@@ -40,6 +54,20 @@ const signUpSchema = Joi.object({
  */
 function signUpValidator(req, res, next) {
   return validate(req.body, signUpSchema)
+    .then(() => next())
+    .catch(err => next(err));
+}
+
+/**
+ * Validate sign in user request.
+ *
+ * @param   {Object} req
+ * @param   {Object} res
+ * @param   {Function} next
+ * @returns {Promise}
+ */
+function signInValidator(req, res, next) {
+  return validate(req.body, signInSchema)
     .then(() => next())
     .catch(err => next(err));
 }
@@ -59,4 +87,4 @@ function findUser(req, res, next) {
     .catch(err => next(err));
 }
 
-export { findUser, signUpValidator };
+export { findUser, signUpValidator, signInValidator };

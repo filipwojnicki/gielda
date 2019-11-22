@@ -20,14 +20,47 @@ export default class index extends Component {
       prices: {},
       historicalPrices: {},
       connectToSocket: false,
-      showedChart: false
+      showedChart: false,
+      userData: {}
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.setState({
       connectToSocket: true
     })
+
+    const token = this.getCookie('token');
+
+    if (token) {
+      const api = new Api(process.env.API_URL);
+      const res = await api.checkAuthToken(token).catch(() => {
+        this.setCookie('token', token, new Date().setDate(new Date().getDate() - 1));
+        return window.location.href = '/signin';
+      });
+
+      if (res.data) {
+        if (res.data.hasOwnProperty('data')) {
+          if (res.data.data) {
+            const data = res.data.data;
+
+            if (!data.success) {
+              this.setCookie('token', token, new Date().setDate(new Date().getDate() - 1));
+              return window.location.href = '/signin';
+            }
+
+            if (data.success) {
+              this.setState({
+                userData: data
+              });
+              return;
+            }
+          }
+        }
+      }
+    }
+    this.setCookie('token', token, new Date().setDate(new Date().getDate() - 1));
+    return window.location.href = '/signin';
   }
 
   handleData = data => {
@@ -75,13 +108,25 @@ export default class index extends Component {
     });
   }
 
+  setCookie(name, value, exdate) {
+    (exdate) && (exdate = new Date(exdate).toUTCString());
+    var c_value = escape(value) + ((exdate === null || exdate === undefined) ? "" : "; expires=" + exdate);
+    document.cookie = name + "=" + c_value;
+  };
+
+  getCookie = (name) => {
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
+  }
+
   render() {
     const socket = this.state.connectToSocket ? <WebSocket onMessage={this.handleData} /> : '';
 
     return (
       <div>
         <Head title="Stocks" description="Best marketplace online." />
-        <MainNav />
+        <MainNav userData={this.state.userData} />
 
         <Container>
           <Row>

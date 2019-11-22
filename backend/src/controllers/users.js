@@ -1,5 +1,6 @@
 import HttpStatus from 'http-status-codes';
 
+import { createJWToken, verifyJWTToken } from '../utils/jwt';
 import * as userService from '../services/userService';
 
 /**
@@ -51,6 +52,33 @@ export async function create(req, res, next) {
 }
 
 /**
+ * Sign in a user.
+ *
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
+export function signIn(req, res, next) {
+  const { email, password } = req.body;
+
+  return userService
+    .getUserByEmailAndPassword(email, password)
+    .then(user => {
+      if (!user) {
+        return res.status(HttpStatus.NOT_FOUND).json({ success: false, text: 'User not found' });
+      }
+
+      return res.json({
+        token: createJWToken({
+          sessionData: user.toJSON(),
+          maxAge: 3600
+        })
+      });
+    })
+    .catch(err => next(err));
+}
+
+/**
  * Update a user.
  *
  * @param {Object} req
@@ -76,4 +104,43 @@ export function deleteUser(req, res, next) {
     .deleteUser(req.params.id)
     .then(data => res.status(HttpStatus.NO_CONTENT).json({ data }))
     .catch(err => next(err));
+}
+
+/**
+ * Verify user json web token.
+ *
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
+export async function verifyJWT(req, res, next) {
+  const tokenData = await verifyJWTToken(req.body.token);
+
+  /**
+   * Function for preparing resolve of token for public usage.
+   *
+   * @param {String} token
+   */
+  const serializeTokenForPublic = token => {
+    const { email, id, name, lastname, credits } = token;
+
+    if (!email || !id || !name || !lastname || !credits) return { success: false };
+
+    return {
+      success: true,
+      email,
+      id,
+      name,
+      lastname,
+      credits
+    };
+  };
+
+  return res.status(200).json({
+    data: tokenData.data
+      ? serializeTokenForPublic(tokenData.data)
+      : {
+          success: false
+        }
+  });
 }

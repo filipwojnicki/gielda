@@ -31,6 +31,17 @@ export default class MainNav extends Component {
     });
   }
 
+  logout = () => {
+    this.setCookie('token', '', new Date().setDate(new Date().getDate() - 1));
+    return window.location.href = '/signin';
+  }
+
+  setCookie(name, value, exdate) {
+    (exdate) && (exdate = new Date(exdate).toUTCString());
+    var c_value = escape(value) + ((exdate === null || exdate === undefined) ? "" : "; expires=" + exdate);
+    document.cookie = name + "=" + c_value;
+  };
+
   render() {
     return (
       <Navbar className="mainNav" color="dark" dark expand="lg">
@@ -40,14 +51,14 @@ export default class MainNav extends Component {
           <Collapse className="flex-grow-1 text-right" isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto flex-nowrap">
               <NavItem>
-                <NavLink disabled={true} href="#">Logged in as John Doe</NavLink>
+                <NavLink disabled={true} href="#">Logged in as {`${(this.props.userData.name) ? this.props.userData.name : ''} ${(this.props.userData.lastname) ? this.props.userData.lastname : ''}`}</NavLink>
               </NavItem>
               {/* <NavItem>
                 <NavLink disabled={true} href="#">
                   <FontAwesomeIcon icon={faCog} />
                 </NavLink>
               </NavItem> */}
-              <NavItem>
+              <NavItem className="cursor-pointer" onClick={this.logout}>
                 <NavLink disabled={true} href="#">
                   <FontAwesomeIcon icon={faPowerOff} />
                 </NavLink>
@@ -55,6 +66,11 @@ export default class MainNav extends Component {
             </Nav>
           </Collapse>
         </Container>
+        <style global jsx>{`
+          .cursor-pointer:hover {
+            cursor: pointer !important;
+          }
+      `}</style>
       </Navbar>
     )
   }

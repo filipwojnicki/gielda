@@ -43,6 +43,34 @@ export function checkUserByEmail(email) {
 }
 
 /**
+ * Get a user by email and password.
+ *
+ * @param   {Number|String}  email
+ * @param   {Number|String}  password
+ * @returns {Promise}
+ */
+export function getUserByEmailAndPassword(email, password) {
+  return new User({
+    email,
+    password: crypto
+      .createHash('sha256')
+      .update(password)
+      .digest('base64')
+  })
+    .fetch()
+    .then(user => {
+      if (!user) {
+        throw Boom.notFound('User not found');
+      }
+
+      return user;
+    })
+    .catch(() => {
+      return null;
+    });
+}
+
+/**
  * Create new user.
  *
  * @param   {Object}  user

@@ -5,11 +5,26 @@ export default class Api {
   constructor(apiUrl) {
     this.API_URL = 'http://localhost:8848/api';
 
-    axios.defaults.baseURL = this.API_URL;
+    this.token = this.getCookie('token');
+
+    this.apiInstance = axios.create({
+      baseURL: 'http://localhost:8848/api',
+      timeout: 10000,
+      headers: {
+        'authorization': (this.token ? this.token : '')
+      }
+    });
+
+  }
+
+  getCookie = (name) => {
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
   }
 
   async getChartData() {
-    const res = await axios
+    const res = await this.apiInstance
       .get('/instruments/history')
       .catch(err => { throw err });
 
@@ -32,13 +47,11 @@ export default class Api {
       method: 'POST',
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
       data: qs.stringify(data),
-      url: '/api/users',
+      url: '/users/signin',
     };
 
-    const res = await axios(options)
-      .catch(err => {
-        throw err
-      });
+    const res = await this.apiInstance(options)
+      .catch(err => { throw err });
 
     return res;
   }
@@ -52,8 +65,6 @@ export default class Api {
       credits
     };
 
-    console.log(data)
-
     const options = {
       method: 'POST',
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
@@ -61,12 +72,10 @@ export default class Api {
       url: '/users',
     };
 
-    const res = await axios(options)
+    const res = await this.apiInstance(options)
       .catch(err => {
         throw err
       });
-
-    console.log(res);
 
     return res;
   }
@@ -82,10 +91,10 @@ export default class Api {
         'content-type': 'application/x-www-form-urlencoded'
       },
       data: qs.stringify(data),
-      url: '/auth/checkToken',
+      url: '/users/verifyjwt',
     };
 
-    const res = await axios(options)
+    const res = await this.apiInstance(options)
       .catch(err => {
         throw err
       });

@@ -1,24 +1,34 @@
 import { Router } from 'express';
 
 import * as userController from '../controllers/users';
-import { signUpValidator } from '../validators/userValidator';
+import { signUpValidator, signInValidator } from '../validators/userValidator';
 
 const router = Router();
 
 /**
  * GET /api/users
  */
-router.get('/', userController.fetchAll);
+// router.get('/', jsonVerify, userController.fetchAll);
 
 /**
  * GET /api/users/:id
  */
-router.get('/:id', userController.fetchById);
+// router.get('/:id', jsonVerify, userController.fetchById);
 
 /**
  * POST /api/users
  */
 router.post('/', signUpValidator, userController.create);
+
+/**
+ * POST /api/users/signin
+ */
+router.post('/signin', signInValidator, userController.signIn);
+
+/**
+ * POST /api/users/verifyjwt
+ */
+router.post('/verifyjwt', userController.verifyJWT);
 
 /**
  * PUT /api/users/:id

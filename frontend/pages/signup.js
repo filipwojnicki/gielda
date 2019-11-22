@@ -31,6 +31,12 @@ export default class SignUp extends Component {
     });
   }
 
+  componentDidMount() {
+    if (this.getCookie('token')) {
+      return window.location.href = '/';
+    };
+  }
+
   getCookie = (name) => {
     var value = "; " + document.cookie;
     var parts = value.split("; " + name + "=");
@@ -56,7 +62,9 @@ export default class SignUp extends Component {
   signUp = async () => {
     const { name, lastname, email, password, credits } = this.state;
 
-    if (this.getCookie('token')) return;
+    if (this.getCookie('token')) {
+      return window.location.href = '/';
+    };
 
     if (name && lastname && email && password && credits && email !== '' && password !== '' && email !== '' && password !== '') {
       const api = new Api(process.env.API_URL);
@@ -72,7 +80,11 @@ export default class SignUp extends Component {
 
       let data = signup.data;
 
-      return this.showToaster(data, true);
+      if (data.success) {
+        this.showToaster(data, true);
+        setTimeout(() => window.location.href = '/signin', 2 * 1000);
+        return ;
+      }
     } else {
       return this.showToaster({text: 'All fields must be filled.'}, false);
     }
