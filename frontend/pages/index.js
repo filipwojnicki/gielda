@@ -4,8 +4,11 @@ import Head from '../components/head'
 import MainNav from '../components/mainNav'
 import Prices from '../components/prices'
 import WebSocket from '../components/webSocket'
+import StockPriceChart from '../components/stockPriceChart'
 
-import { Container, Row, Col } from 'reactstrap'
+import Api from '../lib/Api'
+
+import { Container, Row, Col, Button } from 'reactstrap'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
@@ -15,7 +18,9 @@ export default class index extends Component {
 
     this.state = {
       prices: {},
-      connectToSocket: false
+      historicalPrices: {},
+      connectToSocket: false,
+      showedChart: false
     }
   }
 
@@ -40,15 +45,36 @@ export default class index extends Component {
       return;
     }
 
+    if (this.state.showedChart) {
+      this.getChartData();
+    }
+
     prices = JSON.parse(data.data);
-
-    console.log(prices);
-
-    console.log(Object.keys(prices))
 
     this.setState({
       prices
     })
+  }
+
+  showChart = async () => {
+    if(!this.state.showedChart) {
+      await this.getChartData();
+    }
+
+    console.log(this.state.historicalPrices);
+
+    this.setState({
+      showedChart: !this.state.showedChart
+    });
+  }
+
+  getChartData = async () => {
+    const api = new Api(process.env.API_URL);
+    const chartData = await api.getChartData().catch(error => console.log(error));
+
+    this.setState({
+      historicalPrices: chartData
+    });
   }
 
   render() {
@@ -63,6 +89,15 @@ export default class index extends Component {
           <Row>
             <Col md="6">
               <Prices prices={this.state.prices} />
+            </Col>
+            <Col md="6">
+                1
+            </Col>
+          </Row>
+          <Row>
+            <Col md="6">
+              <Button onClick={this.showChart}>Chart</Button>
+              {this.state.showedChart ? <StockPriceChart historicalPrices={this.state.historicalPrices} /> : ''}
             </Col>
             <Col md="6">
                 1
