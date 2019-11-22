@@ -61,8 +61,6 @@ export default class index extends Component {
       await this.getChartData();
     }
 
-    console.log(this.state.historicalPrices);
-
     this.setState({
       showedChart: !this.state.showedChart
     });
