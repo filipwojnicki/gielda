@@ -15,9 +15,9 @@ export function up(knex) {
       .timestamp('updated_at')
       .notNull()
       .defaultTo(knex.raw('now()'));
-    table.string('publicationdate').notNull();
-    table.integer('instrument_id').notNull();
-    table.float('price').notNull();
+    table.timestamp('publicationdate').notNull();
+    table.integer('instrument_id');
+    table.decimal('price', 12, 6);
   });
 }
 

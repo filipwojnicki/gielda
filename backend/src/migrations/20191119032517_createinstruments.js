@@ -6,7 +6,7 @@
  */
 export function up(knex) {
   return knex.schema.createTable('instruments', table => {
-    table.increments('id');
+    table.increments('id').primary();
     table
       .timestamp('updated_at')
       .notNull()
@@ -24,5 +24,5 @@ export function up(knex) {
  * @returns {Promise}
  */
 export function down(knex) {
-  return knex.schema.dropTable('instruments');
+  return knex.schema.dropTable('instruments').dropTable('instruments_history');
 }
