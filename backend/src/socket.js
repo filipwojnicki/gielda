@@ -12,11 +12,14 @@ const FPSocket = new wsc.WebSocketClient();
 
 FPSocket.open(process.env.SOCKET_URL);
 
+let tempData = {};
+
 FPSocket.onmessage = function(data) {
   for (const websocketclient of websocketList) {
     websocketclient.send(data);
   }
 
+  tempData = data;
   data = data ? JSON.parse(data) : null;
 
   if (data.Items) {
@@ -59,7 +62,12 @@ wss.on('connection', async (ws, req) => {
 
       return;
     }
+
     websocketList.push(ws);
+
+    if (typeof tempData === 'string') {
+      ws.send(tempData);
+    }
   }
 });
 
