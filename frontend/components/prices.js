@@ -1,11 +1,29 @@
 import React, { Component } from 'react'
 
-import { Table, Spinner, Row, Col } from 'reactstrap'
+import { Table, Spinner, Row, Col, Button } from 'reactstrap'
 import Time from 'react-time-format'
+
+import toastr from 'toastr'
+
+import Api from '../lib/Api'
 
 export default class prices extends Component {
   constructor(props) {
     super(props);
+  }
+
+  buyInstrument = async (instrumentCode, instrumentPrice) => {
+    const findCode = this.props.instrumentsDetails.find(item => item.code === instrumentCode);
+
+    const api = new Api(process.env.API_URL);
+    const buyRes = await api.buyInstrument(findCode.id).catch(err => console.log(err));
+
+    if (buyRes.data.success) {
+      this.props.onSuccessfullyBuy(instrumentPrice);
+      return toastr.success(buyRes.data.success);
+    } else if (buyRes.data.error) {
+      return toastr.error(buyRes.data.error);
+    }
   }
 
   render() {
@@ -35,6 +53,7 @@ export default class prices extends Component {
                 <tr key={item.Code}>
                   <td>{item.Name}</td>
                   <td>{item.Price}</td>
+                  <td>{this.props.instrumentsDetails ? <Button color="info" onClick={() => this.buyInstrument(item.Code, item.Price)}>Buy</Button> : ''}</td>
                 </tr>
               )}
             </tbody>

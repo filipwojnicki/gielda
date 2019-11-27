@@ -51,6 +51,82 @@ export default class Api {
     return [];
   }
 
+  async getInstrumentsDetails() {
+    const res = await this.apiInstance
+      .get('/instruments/details')
+      .catch(err => {
+        throw err
+      });
+
+    if (res.status === 200) {
+      if (res.data.length) {
+        return res.data;
+      }
+    }
+
+    return [];
+  }
+
+  async getUserMoney() {
+    const res = await this.apiInstance
+      .get('/users/credits')
+      .catch(err => {
+        throw err
+      });
+
+    if (res.status === 200) {
+      if (res.data) {
+        return res.data;
+      }
+    }
+
+    return {};
+  }
+
+  async buyInstrument(instrumentId) {
+    const data = {
+      instrumentId
+    };
+
+    const options = {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded'
+      },
+      data: qs.stringify(data),
+      url: '/instruments/buy',
+    };
+
+    const res = await this.apiInstance(options)
+      .catch(err => {
+        throw err
+      });
+
+    return res;
+  }
+
+  async sellInstrument(instrumentId) {
+    const data = {
+      instrumentId
+    };
+
+    const options = {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded'
+      },
+      data: qs.stringify(data),
+      url: '/instruments/sell',
+    };
+
+    const res = await this.apiInstance(options)
+      .catch(err => {
+        throw err
+      });
+
+    return res;
+  }
+
   async signIn(email, password) {
     const data = {
       email,

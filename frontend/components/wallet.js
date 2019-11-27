@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
-import { Table, Spinner, Row, Col } from 'reactstrap'
+import { Table, Spinner, Row, Col, Button } from 'reactstrap'
+
+import toastr from 'toastr'
 
 import Api from '../lib/Api'
 
@@ -38,6 +40,7 @@ export default class wallet extends Component {
         <td>{currentPriceData.Price} </td>
         <td>{wItem.count}</td>
         <td>{this.truncateDecimals((wItem.count / currentPriceData.Unit) * currentPriceData.Price, 4)} </td>
+        <td><Button color="info" onClick={() => this.sellInstrument(wItem.instrument.id, currentPriceData.Price)}>Sell</Button></td>
       </tr>
     );
   }
@@ -48,6 +51,19 @@ export default class wallet extends Component {
       truncatedNum = Math[adjustedNum < 0 ? 'ceil' : 'floor'](adjustedNum);
 
     return truncatedNum / multiplier;
+  }
+
+  sellInstrument = async (instrumentId, price) => {
+    const api = new Api(process.env.API_URL);
+    const sellRes = await api.sellInstrument(instrumentId).catch(err => console.log(err));
+
+    if (sellRes.data.success) {
+      this.props.onSuccessfullySell(price);
+      this.getUserWallet();
+      return toastr.success(sellRes.data.success);
+    } else if (sellRes.data.error) {
+      return toastr.error(sellRes.data.error);
+    }
   }
 
   render() {

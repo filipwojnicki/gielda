@@ -12,6 +12,7 @@ import Api from '../lib/Api'
 import { Container, Row, Col, Button } from 'reactstrap'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
+import 'toastr/build/toastr.min.css'
 
 export default class index extends Component {
   constructor() {
@@ -22,8 +23,12 @@ export default class index extends Component {
       historicalPrices: {},
       connectToSocket: false,
       showedChart: false,
-      userData: {}
+      userData: {},
+      instrumentsDetails: [],
+      money: 0
     }
+
+    this.wallet = React.createRef();
   }
 
   async componentDidMount() {
@@ -54,6 +59,8 @@ export default class index extends Component {
               this.setState({
                 userData: data
               });
+              this.getInstrumentsDetails();
+              this.getUserMoney();
               return;
             }
           }
@@ -109,6 +116,24 @@ export default class index extends Component {
     });
   }
 
+  getInstrumentsDetails = async () => {
+    const api = new Api(process.env.API_URL);
+    const instrumentsDetails = await api.getInstrumentsDetails().catch(error => console.log(error));
+
+    this.setState({
+      instrumentsDetails
+    });
+  }
+
+  getUserMoney = async () => {
+    const api = new Api(process.env.API_URL);
+    const moneyRes = await api.getUserMoney().catch(error => console.log(error));
+
+    this.setState({
+      money: moneyRes.credits
+    });
+  }
+
   setCookie(name, value, exdate) {
     (exdate) && (exdate = new Date(exdate).toUTCString());
     var c_value = escape(value) + ((exdate === null || exdate === undefined) ? "" : "; expires=" + exdate);
@@ -119,6 +144,28 @@ export default class index extends Component {
     var value = "; " + document.cookie;
     var parts = value.split("; " + name + "=");
     if (parts.length == 2) return parts.pop().split(";").shift();
+  }
+
+  truncateDecimals(number, digits) {
+    var multiplier = Math.pow(10, digits),
+      adjustedNum = number * multiplier,
+      truncatedNum = Math[adjustedNum < 0 ? 'ceil' : 'floor'](adjustedNum);
+
+    return truncatedNum / multiplier;
+  }
+
+  successfullBuy = (price) => {
+    this.setState({
+      money: this.truncateDecimals(this.state.money - price, 4)
+    });
+
+    this.wallet.current.getUserWallet();
+  }
+
+  successfullSell = (price) => {
+    this.setState({
+      money: this.truncateDecimals(this.state.money + price, 4)
+    });
   }
 
   render() {
@@ -132,10 +179,10 @@ export default class index extends Component {
         <Container>
           <Row>
             <Col md="6">
-              <Prices prices={this.state.prices} />
+              <Prices prices={this.state.prices} instrumentsDetails={this.state.instrumentsDetails} onSuccessfullyBuy={this.successfullBuy} />
             </Col>
             <Col md="6">
-              <Wallet prices={this.state.prices} />
+              <Wallet prices={this.state.prices} ref={this.wallet} onSuccessfullySell={this.successfullSell} />
             </Col>
           </Row>
           <Row>
@@ -144,7 +191,7 @@ export default class index extends Component {
               {this.state.showedChart ? <StockPriceChart historicalPrices={this.state.historicalPrices} /> : ''}
             </Col>
             <Col md="6">
-              <span className="h2">Available money {(this.state.userData.credits) ? this.state.userData.credits : 0}</span>
+              <span className="h2">Available money {(this.state.money) ? this.state.money : 0}</span>
             </Col>
           </Row>
         </Container>

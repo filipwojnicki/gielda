@@ -28,6 +28,21 @@ export function getUser(id) {
 }
 
 /**
+ * Get a user.
+ *
+ * @param   {Number|String}  id
+ * @returns {Promise}
+ */
+export function getUserCredits(id) {
+  return new User({ id })
+    .fetch({ columns: ['credits'] })
+    .then(user => user)
+    .catch(User.NotFoundError, () => {
+      throw Boom.notFound('User not found');
+    });
+}
+
+/**
  * Check if user exist by email.
  *
  * @param   {String}  email
@@ -98,6 +113,17 @@ export function createUser(user) {
  */
 export function updateUser(id, user) {
   return new User({ id }).save({ name: user.name });
+}
+
+/**
+ * Update a user credits.
+ *
+ * @param   {Number|String}  id
+ * @param   {Number}         credits
+ * @returns {Promise}
+ */
+export function updateUserCredits(id, credits) {
+  return new User({ id }).save({ credits }, { method: 'update', patch: true });
 }
 
 /**

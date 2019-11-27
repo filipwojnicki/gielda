@@ -32,6 +32,20 @@ export function fetchById(req, res, next) {
 }
 
 /**
+ * Get a user credits by its id.
+ *
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
+export function fetchCredits(req, res, next) {
+  userService
+    .getUserCredits(req.userId)
+    .then(data => res.json(data))
+    .catch(err => next(err));
+}
+
+/**
  * Create a new user.
  *
  * @param {Object} req

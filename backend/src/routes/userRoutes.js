@@ -3,6 +3,8 @@ import { Router } from 'express';
 import * as userController from '../controllers/users';
 import { signUpValidator, signInValidator } from '../validators/userValidator';
 
+import jwtVerify from '../middlewares/jwtVerify';
+
 const router = Router();
 
 /**
@@ -14,6 +16,11 @@ const router = Router();
  * GET /api/users/:id
  */
 // router.get('/:id', jsonVerify, userController.fetchById);
+
+/**
+ * GET /api/users/credits
+ */
+router.get('/credits', jwtVerify, userController.fetchCredits);
 
 /**
  * POST /api/users
