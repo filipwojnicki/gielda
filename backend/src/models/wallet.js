@@ -42,15 +42,15 @@ class Wallet extends bookshelf.Model {
    * @param {Object} updateData
    * @returns {Promise}
    */
-  // async upsert(selectData, updateData) {
-  //   const existingModel = await this.findOne(selectData);
+  async upsert(selectData, updateData) {
+    const existingModel = await this.findOne(selectData);
 
-  //   if (existingModel) {
-  //     return await existingModel.set(updateData).save();
-  //   } else {
-  //     return await new this(updateData).save();
-  //   }
-  // }
+    if (existingModel) {
+      return existingModel.set(updateData).save();
+    } else {
+      return new this(updateData).save();
+    }
+  }
 }
 
 export default Wallet;
