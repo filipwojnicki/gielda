@@ -8,7 +8,7 @@ export default class Api {
     this.token = this.getCookie('token');
 
     this.apiInstance = axios.create({
-      baseURL: 'http://localhost:8848/api',
+      baseURL: this.API_URL,
       timeout: 10000,
       headers: {
         'authorization': (this.token ? this.token : '')
@@ -21,6 +21,20 @@ export default class Api {
     var value = "; " + document.cookie;
     var parts = value.split("; " + name + "=");
     if (parts.length == 2) return parts.pop().split(";").shift();
+  }
+
+  async getUserWallet() {
+    const res = await this.apiInstance
+      .get('/instruments/wallet')
+      .catch(err => []);
+
+    if (res.status === 200) {
+      if (res.data.length) {
+        return res.data;
+      }
+    }
+
+    return [];
   }
 
   async getChartData() {

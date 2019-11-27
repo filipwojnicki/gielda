@@ -1,6 +1,7 @@
 import bookshelf from '../db';
 
 import InstrumentHistory from './instrumentsHistory';
+import Wallet from './wallet';
 
 const TABLE_NAME = 'instruments';
 
@@ -27,6 +28,13 @@ class Instrument extends bookshelf.Model {
    */
   instrumentHistory() {
     return this.hasMany(InstrumentHistory);
+  }
+
+  /**
+   * Wallet model.
+   */
+  wallet() {
+    return this.hasMany(Wallet);
   }
 }
 

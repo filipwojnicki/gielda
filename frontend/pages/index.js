@@ -5,6 +5,7 @@ import MainNav from '../components/mainNav'
 import Prices from '../components/prices'
 import WebSocket from '../components/webSocket'
 import StockPriceChart from '../components/stockPriceChart'
+import Wallet from '../components/wallet'
 
 import Api from '../lib/Api'
 
@@ -134,7 +135,7 @@ export default class index extends Component {
               <Prices prices={this.state.prices} />
             </Col>
             <Col md="6">
-                1
+              <Wallet prices={this.state.prices} />
             </Col>
           </Row>
           <Row>
