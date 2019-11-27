@@ -37,7 +37,7 @@ export default class wallet extends Component {
         <td>{wItem.instrument.name}</td>
         <td>{currentPriceData.Price} </td>
         <td>{wItem.count}</td>
-        <td>{truncateDecimals((wItem.count / currentPriceData.Unit) * currentPriceData.Price, 4)} </td>
+        <td>{this.truncateDecimals((wItem.count / currentPriceData.Unit) * currentPriceData.Price, 4)} </td>
       </tr>
     );
   }
