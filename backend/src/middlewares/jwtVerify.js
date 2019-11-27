@@ -34,6 +34,8 @@ export default async function jwtVerify(request, response, next) {
           error: tokenData.message || 'No authorization'
         });
       }
+      // eslint-disable-next-line no-use-before-define
+      request.userId = tokenData.data.id;
       next();
     }
   } catch (e) {
