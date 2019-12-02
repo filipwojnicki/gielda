@@ -3,7 +3,7 @@ import qs from 'qs';
 
 export default class Api {
   constructor(apiUrl) {
-    this.API_URL = 'http://localhost:8848/api';
+    this.API_URL = apiUrl || 'http://localhost:8848/api';
 
     this.token = this.getCookie('token');
 

@@ -10,8 +10,6 @@ import { Container, Row, Col, Form, FormGroup, Label, Input, Button } from 'reac
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'toastr/build/toastr.min.css'
 
-let container;
-
 export default class SignUp extends Component {
   constructor() {
     super();
